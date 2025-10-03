@@ -1,7 +1,3 @@
-//idade de eleitor
-//menor de 16 não pode votar
-//16 e 17 anos, eleitor opcional
-//18 eleitor obrigatorio
 
 let idade = Number(prompt('Informe a idade'));
 if (idade<16){
