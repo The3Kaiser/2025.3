@@ -1,3 +1,4 @@
+//Calculadora simples: crie um programa que recebe dois numeros (+,-,*,/) e retorne o resultado correspondente
 let n1 = Number(prompt('Digite o primeiro numero '))
 let n2 = Number(prompt('Digite o segundo numero '))
 let operacao = prompt('Digite a operação "+,-,*,/"');

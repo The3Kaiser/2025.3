@@ -1,3 +1,4 @@
+//classificar idade em faixa etária(criança,adolescente,adulto,idoso)
 let idade = parseInt(prompt('Digite sua idade'))
 if(idade < 12){
     document.write('Criança');

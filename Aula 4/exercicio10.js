@@ -1,3 +1,4 @@
+//Verifique se a pessoa pode votar.
 let idade = Number(prompt('Informe a idade'));
 if (idade<16){
     document.write('Não pode votar e nem dirigir.');
