@@ -12,7 +12,7 @@ const x = 15;
 let y = x * 10;
 console.log(y);
 */
-let nome = 'Elias';
+let nome = 'Eduardo';
 console.log('Meu nome é: ',nome);
 
 let idade = 25;
