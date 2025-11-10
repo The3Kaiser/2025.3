@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaptor Games — Carrinho</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root { --purple: #6f42c1; --bg:#0b0b0b; --card:#141214; --muted:#bfbfbf; }
+  body { background: var(--bg); color:#fff; }
+  .navbar { background:#0f0e13; }
+  .card { background:#121212; border:1px solid #222; color:#fff; }
+  .price { color: var(--purple); font-weight:700; }
+  .btn-purple { background: var(--purple); color:#fff; border:none; }
+  .btn-remove { background:#c33; color:#fff; border:none; }
+  footer { background:#0f0f0f; color:#aaa; padding:10px 0; text-align:center; margin-top:24px; }
+  .game-img { width:110px; height:60px; object-fit:cover; border-radius:6px; }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">🎮 Kaptor Games</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navc"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navc">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="carrinho.html">Carrinho</a></li>
+          <li class="nav-item"><a class="nav-link" href="suporte.html">Suporte</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-4">
+    <h2 class="text-center mb-4">🛒 Seu Carrinho</h2>
+    <div id="cart-area"></div>
+    <div class="text-center mt-4">
+      <h4>Total: <span id="total" class="price">R$ 0,00</span></h4>
+      <div class="mt-3 d-flex justify-content-center gap-2">
+        <button id="checkout" class="btn btn-purple">Finalizar Compra</button>
+        <button id="clear" class="btn btn-outline-light">Limpar Carrinho</button>
+        <a href="index.html" class="btn btn-outline-light">Continuar Comprando</a>
+      </div>
+    </div>
+  </main>
+  <footer>© 2025 Kaptor Games – Todos os direitos reservados.</footer>
+<script>
+const CART_KEY = 'kaptor_cart_v2';
+// formatar moeda BR
+function fmtBR(n){ return 'R$ ' + Number(n).toFixed(2).replace('.', ','); }
+function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); }
+function renderCart(){
+  const cart = getCart();
+  const area = document.getElementById('cart-area');
+  if (!cart.length) {
+    area.innerHTML = '<div class="alert alert-info">Seu carrinho está vazio. <a href="index.html">Voltar à loja</a></div>';
+    document.getElementById('total').textContent = fmtBR(0);
+    return;
+  }
+  let html = `<div class="card p-3"><div class="table-responsive"><table class="table table-dark align-middle">
+    <thead><tr><th>Jogo</th><th>Preço</th><th>Quantidade</th><th>Subtotal</th><th>Ação</th></tr></thead><tbody>`;
+  cart.forEach((it, idx) => {
+    html += `<tr data-idx="${idx}">
+      <td style="min-width:250px"><div class="d-flex align-items-center">
+        <img src="${it.imagem}" alt="${it.nome}" class="game-img me-3">
+        <div>${it.nome}</div>
+      </div></td>
+      <td>${fmtBR(it.preco)}</td>
+      <td>
+        <input type="number" class="form-control qty" data-idx="${idx}" value="${it.qty || 1}" min="1" style="width:90px;background:#0f0f0f;color:#fff;border:1px solid #222">
+      </td>
+      <td class="subtotal">${fmtBR(it.preco * (it.qty || 1))}</td>
+      <td><button class="btn btn-remove btn-sm" data-idx="${idx}">Remover</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div></div>`; // Fechamento correto
+  area.innerHTML = html;
+  attachCartEvents();
+  updateTotal();
+}
+function attachCartEvents(){
+  document.querySelectorAll('.qty').forEach(inp => {
+    inp.addEventListener('input', (e) => {
+      const idx = Number(e.target.getAttribute('data-idx'));
+      const qty = Number(e.target.value) || 1;
+      const cart = getCart();
+      cart[idx].qty = qty;
+      saveCart(cart);
+
+      // atualizar subtotal
+      const row = document.querySelector(`tr[data-idx="${idx}"]`);
+      const subtotalCell = row.querySelector('.subtotal');
+      subtotalCell.textContent = fmtBR(cart[idx].preco * qty);
+      updateTotal();
+    });
+  });
+  document.querySelectorAll('.btn-remove').forEach(b => {
+    b.addEventListener('click', (e) => {
+      const idx = Number(e.target.getAttribute('data-idx'));
+      const cart = getCart();
+      cart.splice(idx,1);
+      saveCart(cart);
+      renderCart();
+    });
+  });
+}
+function updateTotal(){
+  const cart = getCart();
+  let total = 0;
+  cart.forEach(it => {
+    const qty = it.qty || 1;
+    total += it.preco * qty;
+  });
+  document.getElementById('total').textContent = fmtBR(total);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  // garantir qty padrão = 1
+  const cart = getCart();
+  cart.forEach(it => { if (!it.qty) it.qty = 1; });
+  saveCart(cart);
+  renderCart();
+  document.getElementById('clear').addEventListener('click', () => {
+    if (confirm('Deseja limpar o carrinho?')) {
+      localStorage.removeItem(CART_KEY);
+      renderCart();
+    }
+  });
+  document.getElementById('checkout').addEventListener('click', () => {
+    const cartNow = getCart();
+    if (!cartNow.length) { alert('Seu carrinho está vazio.'); return; }
+    // Simulação de finalização
+    alert('Compra finalizada. Obrigado pela preferência!');
+    localStorage.removeItem(CART_KEY);
+    renderCart();
+  });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
