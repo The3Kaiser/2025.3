@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaptor Games — Suporte</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root { --purple:#6f42c1; --bg:#0b0b0b; --card:#121212; }
+  body { background: var(--bg); color:#fff; }
+  .navbar { background:#0f0e13; }
+  .card { background: var(--card); border:1px solid #222; }
+  .btn-purple { background: var(--purple); color:#fff; border:none; }
+  footer { background:#0f0f0f; color:#aaa; padding:10px 0; text-align:center; margin-top:24px; }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">𓅆 Kaptor Games</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navs"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navs">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+          <li class="nav-item"><a class="nav-link active" href="suporte.html">Suporte</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-4">
+    <h2 class="text-center mb-3">📩 Suporte & Sugestões</h2>
+    <div class="card mx-auto p-3" style="max-width:720px;">
+      <form id="form">
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input type="text" id="nome" class="form-control" placeholder="Seu nome" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="email" class="form-control" placeholder="seu@email.com" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tipo</label>
+          <select id="tipo" class="form-select" required>
+            <option value="">Selecione...</option>
+            <option value="sugestao">Sugestão</option>
+            <option value="pergunta">Pergunta</option>
+            <option value="comentario">Comentário</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mensagem</label>
+          <textarea id="msg" class="form-control" rows="5" placeholder="Escreva sua mensagem..." required></textarea>
+        </div>
+        <div class="d-grid">
+          <button class="btn btn-purple" type="submit">Enviar</button>
+        </div>
+      </form>
+      <div id="ok" class="alert alert-success mt-3 d-none">✅ Mensagem enviada (simulação). Obrigado!</div>
+    </div>
+  </main>
+  <footer>© 2025 Kaptor Games – Todos os direitos reservados.</footer>
+<script>
+document.getElementById('form').addEventListener('submit', function(e){
+  e.preventDefault();
+  // Simulação: aqui você pode integrar com Google Forms, email ou um backend.
+  document.getElementById('ok').classList.remove('d-none');
+  this.reset();
+  setTimeout(()=> document.getElementById('ok').classList.add('d-none'), 4000);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

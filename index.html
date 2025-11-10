@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kaptor Games — Home</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root { --purple: #6f42c1; --bg: #0b0b0b; --card: #141214; --muted: #bfbfbf; }
+  body { background: var(--bg); color: #fff; }
+  .navbar { background: #0f0e13; }
+  .btn-purple { background: var(--purple); color: #fff; border: none; }
+  .btn-purple:hover { background: #5a32a3; }
+  .card { background: #121212; border: 1px solid #222; color: #fff; }
+  .section-title { margin-top: 34px; margin-bottom: 12px; padding-left: 10px; border-left: 4px solid var(--purple); }
+  .price { color: var(--purple); font-weight: 700; }
+  footer { background: #0f0f0f; color: var(--muted); padding: 12px 0; margin-top: 36px; text-align:center; }
+  .small-muted { color: #aaa; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">𓅆Kaptor Games</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+          <li class="nav-item"><a class="nav-link" href="suporte.html">Suporte</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-4">
+    <h1 class="text-center mb-3">Destaques da Kaptor Games</h1>
+    <div id="catalog"></div> 
+  </main>
+  <footer>© 2025 Kaptor Games – Todos os direitos reservados.</footer>
+<script>
+/*
+  Lista de jogos
+*/
+const jogos = [
+  // FPS
+  { id:'mw3', categoria:'FPS', nome:'Call of Duty: Modern Warfare 3', original: 299.90, imagem:'https://steamcdn-a.akamaihd.net/steam/apps/42680/header.jpg?t=...' },
+  { id:'bf6', categoria:'FPS', nome:'Battlefield 2042', original: 249.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1517290/header.jpg' },
+  { id:'bocw', categoria:'FPS', nome:'Call of Duty: Black Ops Cold War', original: 299.90, imagem:'https://images.openai.com/static-rsc-1/9-cI64BjeLL5CJkooJP5BPObUrP2GLLKP5WMuBNb-c2OW2GdwisKZm7aFBSomcmgZ13_eAdE-yJmLtAGAtZxPrMywzaKtC-FLjIN0A_NmXma1YYL3OxVFUEJt1p7eUuJyCtOV4o6XpdFQPyrT1WOMA' },
+  { id:'halo', categoria:'FPS', nome:'Halo Infinite', original: 199.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/header.jpg' },
+  { id:'siege', categoria:'FPS', nome:'Rainbow Six Siege', original: 149.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/359550/header.jpg' },
+  // Terror
+  { id:'ln2', categoria:'Terror', nome:'Little Nightmares II', original: 149.90, imagem:'https://steamcdn-a.akamaihd.net/steam/apps/860510/header.jpg?t=...' },
+  { id:'outlast', categoria:'Terror', nome:'Outlast', original: 74.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/238320/header.jpg' },
+  { id:'silentf', categoria:'Terror', nome:'Silent Hill F', original: 399.90, imagem:'https://www.konami.com/games_cms/promo/eu/uploads/05a964c32b94978132fbd9ef55b0ec87-1024x576.png' },
+  { id:'amnesia', categoria:'Terror', nome:'Amnesia: The Dark Descent', original: 99.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/57300/header.jpg' },
+  { id:'phasm', categoria:'Terror', nome:'Phasmophobia', original: 49.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/739630/header.jpg' },
+  // Ação
+  { id:'gow', categoria:'Ação', nome:'God of War Ragnarök', original: 299.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/header.jpg' },
+  { id:'re4', categoria:'Ação', nome:'Resident Evil 4 Remake', original: 191.62, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/2050650/header.jpg' },
+  { id:'rdr2', categoria:'Ação', nome:'Red Dead Redemption 2', original: 299.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1174180/header.jpg' },
+  { id:'dmc5', categoria:'Ação', nome:'Devil May Cry 5', original: 149.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/601150/header.jpg' },
+  { id:'doom', categoria:'Ação', nome:'Doom Eternal', original: 199.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/782330/header.jpg' },
+  // Sobrevivência
+  { id:'forest', categoria:'Sobrevivencia', nome:'The Forest', original: 149.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/242760/header.jpg' },
+  { id:'subnaut', categoria:'Sobrevivencia', nome:'Subnautica', original: 133.36, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/264710/header.jpg' },
+  { id:'ark', categoria:'Sobrevivencia', nome:'ARK: Survival Evolved', original: 199.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/346110/header.jpg' },
+  { id:'greenhell', categoria:'Sobrevivencia', nome:'Green Hell', original: 133.36, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/815370/header.jpg' },
+  { id:'7d2d', categoria:'Sobrevivencia', nome:'7 Days to Die', original: 166.68, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/251570/header.jpg' },
+  // Indie
+  { id:'hollow', categoria:'Indie', nome:'Hollow Knight', original: 74.99, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg' },
+  { id:'silksong', categoria:'Indie', nome:'Hollow Knight: Silksong', original: 133.36, imagem:'https://steamcdn-a.akamaihd.net/steam/apps/1030300/header.jpg' },
+  { id:'celeste', categoria:'Indie', nome:'Celeste', original: 83.36, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/504230/header.jpg' },
+  { id:'cuphead', categoria:'Indie', nome:'Cuphead', original: 124.96, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/268910/header.jpg' },
+  { id:'undertale', categoria:'Indie', nome:'Undertale', original: 49.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/391540/header.jpg' },
+  // RPG
+  { id:'ff7', categoria:'RPG', nome:'Final Fantasy VII Remake Intergrade', original: 174.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1462040/header.jpg' },
+  { id:'ff15', categoria:'RPG', nome:'Final Fantasy XV', original: 125.00, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/637650/header.jpg' },
+  { id:'p3', categoria:'RPG', nome:'Persona 3 Reload', original: 299.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/2161700/header.jpg' },
+  { id:'eldern', categoria:'RPG', nome:'Elden Ring', original: 274.96, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg' },
+  { id:'bg3', categoria:'RPG', nome:"Baldur's Gate 3", original: 250, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg' },
+  // Duplas
+  { id:'ittw', categoria:'Duplas', nome:'It Takes Two', original: 199.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/header.jpg' },
+  { id:'awayout', categoria:'Duplas', nome:'A Way Out', original: 91.64, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/1222700/header.jpg' },
+  { id:'overcooked2', categoria:'Duplas', nome:'Overcooked! 2', original: 133.36, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/728880/header.jpg' },
+  { id:'portal2', categoria:'Duplas', nome:'Portal 2', original: 74.99, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/620/header.jpg' },
+  { id:'dst', categoria:'Duplas', nome:"Don't Starve Together", original: 99.90, imagem:'https://cdn.cloudflare.steamstatic.com/steam/apps/322330/header.jpg' }
+];
+// Categorias na ordem
+const categorias = ['FPS','Terror','Ação','Sobrevivencia','Indie','RPG','Duplas'];
+// Formata BRL
+function fmtBR(v) {
+  return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+}
+// 88% OFF
+function discounted(orig) {
+  return Number((orig * 0.12).toFixed(2));
+}
+function renderCatalog() {
+  const root = document.getElementById('catalog');
+  root.innerHTML = '';
+  categorias.forEach(cat => {
+    const list = jogos.filter(j => j.categoria === cat);
+    if (!list.length) return;
+    const sec = document.createElement('section');
+    sec.innerHTML = `<h3 class="section-title">${cat}</h3><div class="row gy-3"></div>`;
+    const row = sec.querySelector('.row');
+    list.forEach(j => {
+      const dprice = discounted(j.original);
+      const col = document.createElement('div');
+      col.className = 'col-md-4';
+      col.innerHTML = `
+        <div class="card h-100">
+          <img src="${j.imagem}" class="card-img-top" alt="${j.nome}">
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">${j.nome}</h6>
+            <p class="mb-2 small-muted">De ${fmtBR(j.original)}</p>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div class="price">${fmtBR(dprice)}</div>
+              <button class="btn btn-purple btn-sm" data-id="${j.id}">Adicionar ao carrinho</button>
+            </div>
+          </div>
+        </div>`;
+      row.appendChild(col);
+    });
+    root.appendChild(sec);
+  });
+  // Eventos "Adicionar"
+  document.querySelectorAll('.btn-purple[data-id]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = e.currentTarget.getAttribute('data-id');
+      addToCartById(id);
+    });
+  });
+}
+// Carrinho localStorage
+const CART_KEY = 'kaptor_cart_v2';
+function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); }
+function addToCartById(id){
+  const game = jogos.find(j => j.id === id);
+  if (!game) return;
+  const price = discounted(game.original);
+  const cart = getCart();
+  const exists = cart.find(i => i.id === id);
+  if (!exists) {
+    cart.push({ id: game.id, nome: game.nome, preco: price, imagem: game.imagem });
+    saveCart(cart);
+  }
+  const go = confirm(`${game.nome} adicionado ao carrinho.\n\nClique em OK para ir ao carrinho ou Cancelar para continuar comprando.`);
+  if (go) location.href = 'carrinho.html';
+}
+document.addEventListener('DOMContentLoaded', renderCatalog);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
